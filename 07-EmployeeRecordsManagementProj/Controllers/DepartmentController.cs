@@ -4,6 +4,7 @@ using _07_EmployeeRecordsManagementProj.EntityModels;
 using _07_EmployeeRecordsManagementProj.ViewModels.DepartmentVM;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace _07_EmployeeRecordsManagementProj.Controllers
 {
@@ -47,6 +48,23 @@ namespace _07_EmployeeRecordsManagementProj.Controllers
             {
                 ViewBag.Message = "Sorry! Department hasn't been added";
             }
+            return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            Department department = await _unitRepository.departmentRepository.GetByIdAsync(id);
+            DepartmentCreateViewModel departmentVM = _mapper.Map<DepartmentCreateViewModel>(department);
+            if (department != null)
+            {
+                return View(departmentVM);
+            }
+            ViewBag.Message = "Sorry! There is no department found";
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(DepartmentCreateViewModel id)
+        {
             return View();
         }
     }

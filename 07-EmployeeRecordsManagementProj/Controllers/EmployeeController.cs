@@ -19,8 +19,9 @@ namespace _07_EmployeeRecordsManagementProj.Controllers
             this._unitRepository = unitRepository;
             this._mapper = mapper;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string text)
         {
+            ViewBag.Message = text;
             List<Employee> employees = (await _unitRepository.employeeRepository.GetAllAsync()).ToList();
             List<EmployeeCreateViewModel> employeeVM = _mapper.Map<List<EmployeeCreateViewModel>>(employees);
             return View(employeeVM);
@@ -60,7 +61,7 @@ namespace _07_EmployeeRecordsManagementProj.Controllers
             ViewBag.Departments = new SelectList(departments, "DepartmentId", "DepartmentName");
             Employee employee = await _unitRepository.employeeRepository.GetByIdAsync(id);
             EmployeeCreateViewModel employeeVM = _mapper.Map<EmployeeCreateViewModel>(employee);
-            if(employee != null)
+            if (employee != null)
             {
                 return View(employeeVM);
             }
@@ -68,7 +69,7 @@ namespace _07_EmployeeRecordsManagementProj.Controllers
             {
                 ViewBag.Message = "Sorry! There is no employee information from this id";
                 return View();
-            }             
+            }
         }
         [HttpPost]
         public async Task<IActionResult> Edit(EmployeeCreateViewModel employeeVM)
@@ -92,7 +93,7 @@ namespace _07_EmployeeRecordsManagementProj.Controllers
         {
             Employee employee = await _unitRepository.employeeRepository.GetByIdAsync(id);
             bool isReomved = false;
-            if(employee != null)
+            if (employee != null)
             {
                 _unitRepository.employeeRepository.Remove(employee);
                 isReomved = await _unitRepository.SaveChangesAsync();
@@ -101,7 +102,7 @@ namespace _07_EmployeeRecordsManagementProj.Controllers
             {
                 return RedirectToAction("Index", "Employee");
             }
-            return View();
+            return RedirectToAction("Index", "Employee", new { text = "Sorry, employee hasn't been removed" });
         }
     }
 }

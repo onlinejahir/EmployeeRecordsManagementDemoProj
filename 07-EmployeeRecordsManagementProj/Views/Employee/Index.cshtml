@@ -4,6 +4,12 @@
 }
 
 <div class="container p-4">
+    @if(ViewBag.Message != null)
+    {
+        <div>
+            @ViewBag.Message
+        </div>
+    }
     <div class="row">
         <div class="col-md-12">
             <h3 class="p-4">All Employees</h3>
@@ -22,7 +28,7 @@
     </div>
     <div class="row">
         <div class="col-md-12 p-4">
-            <table>
+            <table class="table table-striped">
                 <thead class="table table-striped">
                     <tr>
                         <th scope="col">ID</th>
