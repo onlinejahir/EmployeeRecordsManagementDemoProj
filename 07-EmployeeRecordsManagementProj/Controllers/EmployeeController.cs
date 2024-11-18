@@ -19,10 +19,42 @@ namespace _07_EmployeeRecordsManagementProj.Controllers
             this._unitRepository = unitRepository;
             this._mapper = mapper;
         }
-        public async Task<IActionResult> Index(string text)
+        public async Task<IActionResult> Index(string text, string searchString, string sortOrder)
         {
             ViewBag.Message = text;
             List<Employee> employees = (await _unitRepository.employeeRepository.GetAllAsync()).ToList();
+            //search functionality
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                employees = employees.Where(e => e.FirstName.Contains(searchString) || e.LastName.Contains(searchString)).ToList();
+            }
+
+            //sorting
+            ViewData["NameSortParam"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateOfBirthSortParam"] = sortOrder == "date_asc" ? "date_desc" : "date_asc";
+            ViewData["IsActiveSortParam"] = sortOrder == "isactive_asc" ? "isactive_desc" : "isactive_asc";
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    employees = employees.OrderByDescending(e => e.FirstName).ToList();
+                    break;
+                case "date_asc":
+                    employees = employees.OrderBy(e => e.DateOfBirth).ToList();
+                    break;
+                case "date_desc":
+                    employees = employees.OrderByDescending(e => e.DateOfBirth).ToList();
+                    break;
+                case "isactive_asc":
+                    employees = employees.OrderBy(e => e.IsActive).ToList();
+                    break;
+                case "isactive_desc":
+                    employees = employees.OrderByDescending(e => e.IsActive).ToList();
+                    break;
+
+                default:
+                    employees = employees.OrderBy(e => e.FirstName).ToList();
+                    break;
+            }
             List<EmployeeCreateViewModel> employeeVM = _mapper.Map<List<EmployeeCreateViewModel>>(employees);
             return View(employeeVM);
         }

@@ -19,8 +19,9 @@ namespace _07_EmployeeRecordsManagementProj.Controllers
             this._unitRepository = unitRepository;
             this._mapper = mapper;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string text)
         {
+            ViewBag.Message = text;
             IEnumerable<Department> departments = await _unitRepository.departmentRepository.GetAllAsync();
             IEnumerable<DepartmentCreateViewModel> departmentVM = _mapper.Map<IEnumerable<DepartmentCreateViewModel>>(departments);
             return View(departmentVM);
@@ -63,9 +64,37 @@ namespace _07_EmployeeRecordsManagementProj.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Edit(DepartmentCreateViewModel id)
+        public async Task<IActionResult> Edit(DepartmentCreateViewModel departmentVM)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(departmentVM);
+            }
+            Department department = _mapper.Map<Department>(departmentVM);
+            _unitRepository.departmentRepository.Update(department);
+            bool isUpdated = await _unitRepository.SaveChangesAsync();
+            if (isUpdated)
+            {
+                return RedirectToAction("Index", "Department");
+            }
+            ViewBag.Message = "Sorry! information hasn't been updated";
             return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            Department department = await _unitRepository.departmentRepository.GetByIdAsync(id);
+            bool isRemoved = false;
+            if (department != null)
+            {
+                _unitRepository.departmentRepository.Remove(department);
+                isRemoved = await _unitRepository.SaveChangesAsync();
+            }
+            if (isRemoved)
+            {
+                return RedirectToAction("Index", "Department");
+            }
+            return RedirectToAction("Index", "Department", new { text = "Sorry! department hasn't been removed" });
         }
     }
 }
