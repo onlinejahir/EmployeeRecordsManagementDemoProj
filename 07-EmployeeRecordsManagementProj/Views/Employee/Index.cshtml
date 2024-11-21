@@ -1,10 +1,10 @@
-﻿@model IEnumerable<EmployeeCreateViewModel>
+﻿@model PaginatedList<Employee>
 @{
     ViewData["Title"] = "All Employees";
 }
 
 <div class="container p-4">
-    @if(ViewBag.Message != null)
+    @if (ViewBag.Message != null)
     {
         <div>
             @ViewBag.Message
@@ -45,7 +45,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var employee in Model)
+                    @foreach (var employee in Model.Items)
                     {
                         <tr>
                             <td>@employee.EmployeeId</td>
@@ -57,12 +57,48 @@
                             <td>@employee.PhoneNumber</td>
                             <td>@employee.Address</td>
                             <td>@(employee.IsActive ? "Yes" : "No")</td>
-                            <td><a class="btn btn-dark" asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.EmployeeId" >Edit</a></td>
+                            <td><a class="btn btn-dark" asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.EmployeeId">Edit</a></td>
                             <td><a class="btn btn-danger" asp-controller="Employee" asp-action="Delete" asp-route-id="@employee.EmployeeId" onclick="return confirm('Are you sure you want to delete this employee?')">Delete</a></td>
                         </tr>
-                    }                    
+                    }
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+        </div>
+        <div class="col-md-6">
+            <nav>
+                <ul class="pagination justify-content-end">
+                    <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                        <a class="page-link text-black" asp-route-pageNumber="1">
+                            <span>First</span>
+                        </a>
+                    </li>
+                    <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                        <a class="page-link text-black" asp-route-pageNumber="@(Model.PageIndex - 1)">
+                            <span>Previous</span>
+                        </a>
+                    </li>
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                            <a class="page-link text-black" asp-route-pageNumber="@i">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                        <a class="page-link text-black" asp-route-pageNumber="@(Model.PageIndex + 1)">
+                            <span>Next</span>
+                        </a>
+                    </li>
+                    <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link text-black" asp-route-pageNumber="@(Model.TotalPages)">
+                            <span>Last</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

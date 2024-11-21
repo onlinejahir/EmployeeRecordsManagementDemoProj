@@ -9,6 +9,6 @@
         void Remove(T entity);
         void RemoveRange(IEnumerable<T> entities);
         Task<T?> GetByIdAsync(int? id);
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<IQueryable<T>> GetAllAsync();
     }
 }

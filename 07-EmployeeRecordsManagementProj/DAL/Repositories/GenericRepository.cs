@@ -21,9 +21,9 @@ namespace _07_EmployeeRecordsManagementProj.DAL.Repositories
             await _dbContext.Set<T>().AddRangeAsync(entities);
         }
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync()
+        public virtual async Task<IQueryable<T>> GetAllAsync()
         {
-            return await _dbContext.Set<T>().ToListAsync();
+            return await Task.FromResult(_dbContext.Set<T>().AsQueryable());
         }
 
         public virtual async Task<T?> GetByIdAsync(int? id)
