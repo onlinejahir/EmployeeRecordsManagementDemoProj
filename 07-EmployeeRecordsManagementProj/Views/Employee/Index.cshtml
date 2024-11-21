@@ -38,6 +38,7 @@
                         <th scope="col">Gender</th>
                         <th scope="col">Email</th>
                         <th scope="col">Phone Number</th>
+                        <th scope="col">Department</th>
                         <th scope="col">Address</th>
                         <th scope="col"><a asp-controller="Employee" asp-action="Index" class="text-dark" asp-route-sortOrder=@ViewData["IsActiveSortParam"]>IsActive</a></th>
                         <th></th>
@@ -55,6 +56,7 @@
                             <td>@employee.Gender</td>
                             <td>@employee.Email</td>
                             <td>@employee.PhoneNumber</td>
+                            <td>@employee.Department.DepartmentName</td>
                             <td>@employee.Address</td>
                             <td>@(employee.IsActive ? "Yes" : "No")</td>
                             <td><a class="btn btn-dark" asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.EmployeeId">Edit</a></td>
