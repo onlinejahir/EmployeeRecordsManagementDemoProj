@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace _07_EmployeeRecordsManagementProj.DAL.Repositories
 {
-    public class GenericRepository<T> : Contracts.GenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         protected readonly ApplicationDbContext _dbContext;
         public GenericRepository(ApplicationDbContext dbContext)
@@ -15,17 +15,14 @@ namespace _07_EmployeeRecordsManagementProj.DAL.Repositories
         {
             await _dbContext.Set<T>().AddAsync(entity);
         }
-
         public virtual async Task AddRangeAsync(IEnumerable<T> entities)
         {
             await _dbContext.Set<T>().AddRangeAsync(entities);
         }
-
         public virtual async Task<IQueryable<T>> GetAllAsync()
         {
             return await Task.FromResult(_dbContext.Set<T>().AsQueryable());
         }
-
         public virtual async Task<T?> GetByIdAsync(int? id)
         {
             return await _dbContext.Set<T>().FindAsync(id);

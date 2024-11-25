@@ -2,7 +2,7 @@
 
 namespace _07_EmployeeRecordsManagementProj.DAL.Contracts
 {
-    public interface IEmployeeRepository : GenericRepository<Employee>
+    public interface IEmployeeRepository : IGenericRepository<Employee>
     {
 
     }
